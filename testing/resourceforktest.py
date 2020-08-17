@@ -30,9 +30,9 @@ class ResourceForkTest(unittest.TestCase):
         self.make_temp()
         rp = self.tempdir.append('test')
         rp.touch()
-        assert rp.get_resource_fork() == '', rp.get_resource_fork()
+        assert rp.get_resource_fork() == b'', rp.get_resource_fork()
 
-        s = 'new resource fork data'
+        s = b'new resource fork data'
         rp.write_resource_fork(s)
         assert rp.get_resource_fork() == s, rp.get_resource_fork()
 
@@ -45,12 +45,12 @@ class ResourceForkTest(unittest.TestCase):
         self.make_temp()
         rp = self.tempdir.append('test')
         rp.touch()
-        rp.set_resource_fork('hello')
+        rp.set_resource_fork(b'hello')
 
         record = metadata.RORP2Record(rp)
         rorp_out = metadata.Record2RORP(record)
         assert rorp_out == rp, (rorp_out, rp)
-        assert rorp_out.get_resource_fork() == 'hello'
+        assert rorp_out.get_resource_fork() == b'hello'
 
     def make_backup_dirs(self):
         """Create testfiles/resource_fork_test[12] dirs for testing"""
@@ -65,9 +65,9 @@ class ResourceForkTest(unittest.TestCase):
         rp1_1.touch()
         rp1_2.touch()
         rp1_3.symlink('foo')
-        rp1_1.write_resource_fork('This should appear in resource fork')
+        rp1_1.write_resource_fork(b'This should appear in resource fork')
         rp1_1.chmod(0o400)  # test for bug changing resource forks after perms
-        rp1_2.write_resource_fork('Data for the resource fork 2')
+        rp1_2.write_resource_fork(b'Data for the resource fork 2')
 
         self.rf_testdir2.mkdir()
         rp2_1 = self.rf_testdir2.append('1')
@@ -76,9 +76,9 @@ class ResourceForkTest(unittest.TestCase):
         rp2_1.touch()
         rp2_2.touch()
         rp2_3.touch()
-        rp2_1.write_resource_fork('New data for resource fork 1')
+        rp2_1.write_resource_fork(b'New data for resource fork 1')
         rp2_1.chmod(0o400)
-        rp2_3.write_resource_fork('New fork')
+        rp2_3.write_resource_fork(b'New fork')
 
     def testSeriesLocal(self):
         """Test backing up and restoring directories with ACLs locally"""
